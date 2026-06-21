@@ -1,0 +1,185 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Laporan & Analitik - SITAMU PeTIK{% endblock %}
+
+{% block content %}
+
+<style>
+    @media print {
+        /* Sembunyikan Sidebar dan Navbar */
+        aside, header, nav, #sidebar {
+            display: none !important;
+        }
+
+        /* Hilangkan jarak kosong dan buat tabel full width */
+        body, main, .max-w-\[1440px\] {
+            margin: 0 !important;
+            padding: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+    }
+</style>
+
+<div class="max-w-[1440px] mx-auto space-y-6 bg-slate-50 dark:bg-slate-900 min-h-screen pb-12 transition-colors duration-300">
+
+    <!-- HEADER (Sembunyi saat cetak) -->
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 print:hidden">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white transition-colors">Laporan & Analitik</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">Generator laporan kustom, analitik data, dan eksportasi dokumen resmi.</p>
+        </div>
+        <!-- Tombol Pintasan ke Pengaturan -->
+        <div class="flex gap-2">
+            <a href="/admin/pengaturan" class="px-5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl shadow-sm text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">settings</span> Pengaturan Laporan
+            </a>
+        </div>
+    </div>
+
+    <!-- REPORT BUILDER FORM (Sembunyi saat cetak) -->
+    <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-5 transition-colors print:hidden">
+        <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3 transition-colors">
+            <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">tune</span> Report Builder (Parameter Pencarian)
+        </h2>
+
+        <form action="/admin/laporan" method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="lg:col-span-1">
+                <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Periode Awal</label>
+                <input type="date" name="start_date" value="{{ start_date }}" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 outline-none">
+            </div>
+            <div class="lg:col-span-1">
+                <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Periode Akhir</label>
+                <input type="date" name="end_date" value="{{ end_date }}" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 outline-none">
+            </div>
+            <div class="lg:col-span-1">
+                <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Kategori Tamu</label>
+                <select name="kategori" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 outline-none">
+                    <option value="semua" {% if kategori == 'semua' %}selected{% endif %}>Semua Kategori</option>
+                    <option value="lembaga" {% if kategori == 'lembaga' %}selected{% endif %}>Hanya Lembaga</option>
+                    <option value="pribadi" {% if kategori == 'pribadi' %}selected{% endif %}>Hanya Pribadi</option>
+                </select>
+            </div>
+            <div class="lg:col-span-1">
+                <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Divisi Tujuan</label>
+                <select name="divisi" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 outline-none">
+                    <option value="semua" {% if divisi == 'semua' %}selected{% endif %}>Semua Divisi</option>
+                    <option value="HR / General Affair" {% if divisi == 'HR / General Affair' %}selected{% endif %}>HR / General Affair</option>
+                    <option value="Operasional" {% if divisi == 'Operasional' %}selected{% endif %}>Operasional</option>
+                    <option value="Teknologi Informasi" {% if divisi == 'Teknologi Informasi' %}selected{% endif %}>Teknologi Informasi</option>
+                    <option value="Akademik" {% if divisi == 'Akademik' %}selected{% endif %}>Akademik</option>
+                </select>
+            </div>
+            <div class="lg:col-span-1 flex items-end">
+                <button type="submit" class="w-full bg-slate-900 dark:bg-slate-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 shadow-sm">
+                    <span class="material-symbols-outlined text-[18px]">magic_button</span> Buat Laporan
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ANALYTIC CARDS (Sembunyi saat cetak) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 print:hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Data (Tersaring)</p>
+            <h3 class="text-2xl font-black text-slate-900 dark:text-white">{{ total_tamu }}</h3>
+            <p class="text-xs text-emerald-500 font-medium mt-2">Berdasarkan filter aktif</p>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Rasio Lembaga</p>
+            <h3 class="text-2xl font-black text-slate-900 dark:text-white">{{ rasio_lembaga }}%</h3>
+            <p class="text-xs text-slate-500 font-medium mt-2">Mendominasi pencarian ini</p>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Staf Terbanyak Dicari</p>
+            <h3 class="text-lg font-black text-slate-900 dark:text-white mt-1 truncate">{{ top_staf }}</h3>
+            <p class="text-xs text-slate-500 font-medium mt-1">{{ top_staf_kunjungan }} Kunjungan</p>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm transition-colors flex flex-col justify-center">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Aksi Ekspor Resmi</p>
+            <button onclick="window.print()" class="w-full bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 text-sm font-bold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span> Cetak PDF / A4
+            </button>
+        </div>
+    </div>
+
+    <!-- ONE PAGE REPORT (Kertas A4, Tampil saat normal & cetak) -->
+    <div class="bg-white text-black p-8 sm:p-12 shadow-xl border border-slate-200 mx-auto max-w-[21cm] min-h-[29.7cm] print:shadow-none print:border-none print:m-0 print:p-0 print:w-full">
+
+        <!-- Kop Surat -->
+        <div class="flex flex-col sm:flex-row items-center gap-6 border-b-4 border-black pb-4 mb-6 text-center sm:text-left">
+            <!-- Menampilkan Logo Gambar jika ada, jika tidak tampilkan teks -->
+            <div class="w-24 h-24 bg-slate-100 rounded flex items-center justify-center font-bold text-slate-400 flex-shrink-0 overflow-hidden">
+                {% if profil.logo_path %}
+                    <img src="{{ url_for('static', filename='uploads/' + profil.logo_path) }}" class="w-full h-full object-cover">
+                {% else %}
+                    LOGO Instansi
+                {% endif %}
+            </div>
+            <div class="flex-1">
+                <h1 class="text-2xl font-black uppercase tracking-wider leading-tight">{{ profil.nama_sistem | default('SITAMU') }}</h1>
+                <h2 class="text-lg font-bold">{{ profil.nama_instansi }}</h2>
+                <p class="text-xs mt-1">{{ profil.alamat }}</p>
+            </div>
+        </div>
+
+        <!-- Judul Laporan -->
+        <div class="text-center mb-6">
+            <h3 class="text-lg font-bold underline uppercase">Laporan Rekapitulasi Kunjungan Tamu</h3>
+            <p class="text-xs mt-1 font-medium">Periode: {{ start_date or 'Awal' }} s/d {{ end_date or 'Sekarang' }}</p>
+        </div>
+
+        <!-- Tabel Data Laporan -->
+        <table class="w-full text-left border-collapse border border-black mb-8 text-xs sm:text-sm">
+            <thead>
+                <tr class="bg-slate-100">
+                    <th class="border border-black px-3 py-2 text-center w-10">No</th>
+                    <th class="border border-black px-3 py-2">Waktu Kunjungan</th>
+                    <th class="border border-black px-3 py-2">Nama Tamu & Instansi</th>
+                    <th class="border border-black px-3 py-2">Tujuan Bertemu</th>
+                    <th class="border border-black px-3 py-2 text-center">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if laporan_data %}
+                    {% for row in laporan_data %}
+                    <tr>
+                        <td class="border border-black px-3 py-2 text-center">{{ loop.index }}</td>
+                        <td class="border border-black px-3 py-2">
+                            Masuk: {{ row.waktu_masuk.strftime('%d-%m-%Y %H:%M') }}<br>
+                            Keluar: {{ row.waktu_keluar.strftime('%d-%m-%Y %H:%M') if row.waktu_keluar else '-' }}
+                        </td>
+                        <td class="border border-black px-3 py-2">
+                            <strong>{{ row.nama_lengkap }}</strong><br>
+                            <span class="text-slate-600">{{ row.instansi or 'Pribadi' }}</span>
+                        </td>
+                        <td class="border border-black px-3 py-2">
+                            <strong>{{ row.nama_staf }}</strong><br>
+                            <span class="text-slate-600">{{ row.divisi }}</span>
+                        </td>
+                        <td class="border border-black px-3 py-2 text-center uppercase font-bold">{{ row.status }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="border border-black px-3 py-8 text-center italic text-slate-500">Tidak ada data kunjungan yang sesuai dengan filter pencarian.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        <!-- TANDA TANGAN (Diperbarui jadi dinamis) -->
+        <div class="flex justify-end pr-10 mt-12">
+            <div class="text-center">
+                <p class="text-sm">Jombang, {{ tanggal_cetak }}</p>
+                <p class="text-sm font-bold mb-20 mt-1">Administrator SITAMU</p>
+
+                <p class="text-sm font-bold underline">{{ profil.nama_penandatangan or 'Administrator SITAMU' }}</p>
+                <p class="text-xs">NIP. {{ profil.nip_penandatangan or '-' }}</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

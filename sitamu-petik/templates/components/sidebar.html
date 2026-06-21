@@ -1,0 +1,194 @@
+<aside id="sidebar" class="fixed md:relative top-0 left-0 h-full w-[260px] bg-white dark:bg-slate-900 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 flex flex-col shrink-0 border-r border-slate-100 dark:border-slate-800 transition-colors">
+    <div class="flex flex-col h-full py-6 px-4 gap-2">
+
+        <!-- Header Profil Sidebar -->
+        <div class="flex items-center gap-3 mb-8 px-2">
+            {% if session.get('role') == 'admin' %}
+            <!-- Header untuk Admin -->
+            <div class="w-10 h-10 rounded-full bg-slate-800 dark:bg-slate-700 text-white flex items-center justify-center shadow-md shadow-slate-800/20 dark:shadow-none transition-colors">
+                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+            </div>
+            <div>
+                <h2 class="font-bold text-slate-900 dark:text-white tracking-tight leading-tight text-sm transition-colors">SITAMU PeTIK</h2>
+                <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest transition-colors">Administrator</p>
+            </div>
+            {% else %}
+            <!-- Header untuk Security -->
+            <div class="w-10 h-10 rounded-full bg-blue-600 dark:bg-blue-500 text-white flex items-center justify-center shadow-md shadow-blue-600/20 dark:shadow-none transition-colors">
+                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">security</span>
+            </div>
+            <div>
+                <h2 class="font-bold text-slate-900 dark:text-white tracking-tight leading-tight text-sm transition-colors">SITAMU PeTIK</h2>
+                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">Pos Penjagaan</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Menu Navigasi Utama -->
+        <nav class="flex-1 flex flex-col gap-1 overflow-y-auto custom-scrollbar pr-1">
+
+            {% if session.get('role') == 'admin' %}
+
+            <!-- ============================== -->
+            <!-- MENU ADMINISTRATOR -->
+            <!-- ============================== -->
+
+            <a href="/admin/dashboard" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/admin/dashboard' %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 font-medium{% endif %}">
+                {% if request.path == '/admin/dashboard' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-slate-800 dark:bg-slate-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/admin/dashboard' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>dashboard</span>
+                <span class="text-sm">Dashboard</span>
+            </a>
+
+            <!-- DINONAKTIFKAN: Fiturnya mirip dengan menu Kunjungan -->
+            <!--
+            <a href="/admin/tamu" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/admin/tamu' %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 font-medium{% endif %}">
+                {% if request.path == '/admin/tamu' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-slate-800 dark:bg-slate-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/admin/tamu' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>groups</span>
+                <span class="text-sm">Manajemen Tamu</span>
+            </a>
+            -->
+
+            <a href="/admin/kunjungan" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/admin/kunjungan' %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 font-medium{% endif %}">
+                {% if request.path == '/admin/kunjungan' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-slate-800 dark:bg-slate-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/admin/kunjungan' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>menu_book</span>
+                <span class="text-sm">Kunjungan</span>
+            </a>
+
+            <a href="/admin/staf" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/admin/staf' %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 font-medium{% endif %}">
+                {% if request.path == '/admin/staf' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-slate-800 dark:bg-slate-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/admin/staf' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>badge</span>
+                <span class="text-sm">Manajemen Staf</span>
+            </a>
+
+            <a href="/admin/laporan" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/admin/laporan' %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 font-medium{% endif %}">
+                {% if request.path == '/admin/laporan' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-slate-800 dark:bg-slate-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/admin/laporan' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>analytics</span>
+                <span class="text-sm">Laporan & Analitik</span>
+            </a>
+
+            <!-- DINONAKTIFKAN: Foto bisa dilihat langsung dari riwayat Kunjungan -->
+            <!--
+            <a href="/admin/dokumentasi" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/admin/dokumentasi' %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 font-medium{% endif %}">
+                {% if request.path == '/admin/dokumentasi' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-slate-800 dark:bg-slate-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/admin/dokumentasi' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>photo_camera</span>
+                <span class="text-sm">Dokumentasi Tamu</span>
+            </a>
+            -->
+
+            <a href="/admin/pengguna" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/admin/pengguna' %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 font-medium{% endif %}">
+                {% if request.path == '/admin/pengguna' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-slate-800 dark:bg-slate-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/admin/pengguna' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>manage_accounts</span>
+                <span class="text-sm">Pengguna Sistem</span>
+            </a>
+
+            <!-- DINONAKTIFKAN: Fitur realtime belum diminta -->
+            <!--
+            <a href="/admin/notifikasi" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/admin/notifikasi' %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 font-medium{% endif %}">
+                {% if request.path == '/admin/notifikasi' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-slate-800 dark:bg-slate-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/admin/notifikasi' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>notifications_active</span>
+                <span class="text-sm">Notifikasi & Alert</span>
+            </a>
+            -->
+
+            <!-- DINONAKTIFKAN: Fitur log aktivitas terlalu advance untuk MVP saat ini -->
+            <!--
+            <a href="/admin/audit" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/admin/audit' %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 font-medium{% endif %}">
+                {% if request.path == '/admin/audit' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-slate-800 dark:bg-slate-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/admin/audit' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>receipt_long</span>
+                <span class="text-sm">Audit Log</span>
+            </a>
+            -->
+
+            {% else %}
+
+            <!-- ============================== -->
+            <!-- MENU SECURITY / PETUGAS -->
+            <!-- ============================== -->
+
+            <a href="/" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/' %}bg-blue-50/50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 font-medium{% endif %}">
+                {% if request.path == '/' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>dashboard</span>
+                <span class="text-sm">Dashboard</span>
+            </a>
+
+            <a href="/register" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/register' %}bg-blue-50/50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 font-medium{% endif %}">
+                {% if request.path == '/register' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/register' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>person_add</span>
+                <span class="text-sm">Registrasi Tamu</span>
+            </a>
+
+            <a href="/tamu-aktif" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/tamu-aktif' %}bg-blue-50/50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 font-medium{% endif %}">
+                {% if request.path == '/tamu-aktif' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/tamu-aktif' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>radar</span>
+                <span class="text-sm">Tamu Aktif</span>
+            </a>
+
+            <a href="/riwayat" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/riwayat' %}bg-blue-50/50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 font-medium{% endif %}">
+                {% if request.path == '/riwayat' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/riwayat' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>history</span>
+                <span class="text-sm">Riwayat Kunjungan</span>
+            </a>
+
+            <!-- DINONAKTIFKAN: Petugas tidak perlu buat laporan -->
+            <!--
+            <a href="/laporan" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/laporan' %}bg-blue-50/50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 font-medium{% endif %}">
+                {% if request.path == '/laporan' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/laporan' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>analytics</span>
+                <span class="text-sm">Laporan</span>
+            </a>
+            -->
+
+            <!-- DINONAKTIFKAN: Petugas tidak butuh list staf terpisah, cukup dari dropdown registrasi -->
+            <!--
+            <a href="/staf" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == '/staf' %}bg-blue-50/50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 font-medium{% endif %}">
+                {% if request.path == '/staf' %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-500 rounded-r-full transition-colors"></div>{% endif %}
+                <span class="material-symbols-outlined text-[22px]" {% if request.path == '/staf' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>badge</span>
+                <span class="text-sm">Data Staf</span>
+            </a>
+            -->
+
+            {% endif %}
+
+        </nav>
+
+        <!-- Menu Bottom (Settings & Logout) -->
+        <div class="mt-auto pt-4 flex flex-col gap-2 border-t border-slate-100 dark:border-slate-800 transition-colors">
+
+<!--            {% if session.get('role') != 'admin' %}-->
+<!--            &lt;!&ndash; Tombol Darurat (Khusus Security) &ndash;&gt;-->
+<!--            <button class="w-full flex items-center justify-center gap-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 py-2.5 rounded-xl text-sm font-semibold transition-colors mb-1">-->
+<!--                <span class="material-symbols-outlined text-[18px]">emergency</span> Tombol Darurat-->
+<!--            </button>-->
+<!--            {% endif %}-->
+
+            <!-- Pengaturan -->
+            {% if session.get('role') == 'admin' %}
+                <!-- Menu Pengaturan Hanya Ditampilkan untuk Admin -->
+                {% set setting_url = '/admin/pengaturan' %}
+                <a href="{{ setting_url }}" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == setting_url %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 font-medium{% endif %}">
+                    {% if request.path == setting_url %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-slate-800 dark:bg-slate-500 rounded-r-full transition-colors"></div>{% endif %}
+                    <span class="material-symbols-outlined text-[22px]" {% if request.path == setting_url %}style="font-variation-settings: 'FILL' 1;"{% endif %}>settings</span>
+                    <span class="text-sm">Pengaturan Sistem</span>
+                </a>
+            {% endif %}
+
+            <!-- DINONAKTIFKAN: Menu Pengaturan Security (Tidak Punya Wewenang) -->
+            <!--
+            {% if session.get('role') != 'admin' %}
+                {% set setting_url = '/pengaturan' %}
+                <a href="{{ setting_url }}" class="relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors {% if request.path == setting_url %}bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold{% else %}text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 font-medium{% endif %}">
+                    {% if request.path == setting_url %}<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-600 dark:bg-blue-500 rounded-r-full transition-colors"></div>{% endif %}
+                    <span class="material-symbols-outlined text-[22px]" {% if request.path == setting_url %}style="font-variation-settings: 'FILL' 1;"{% endif %}>settings</span>
+                    <span class="text-sm">Pengaturan Sistem</span>
+                </a>
+            {% endif %}
+            -->
+
+            <a href="/logout" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors font-medium">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
+                <span class="text-sm">Keluar</span>
+            </a>
+        </div>
+
+    </div>
+</aside>

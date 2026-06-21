@@ -1,0 +1,89 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Laporan - SITAMU PeTIK{% endblock %}
+
+{% block content %}
+<div class="max-w-[1440px] mx-auto space-y-6 bg-slate-50 dark:bg-slate-900 min-h-screen pb-12 transition-colors duration-300">
+
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white transition-colors">Laporan Kunjungan</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">Generate dan unduh rekap data tamu berdasarkan periode waktu.</p>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none border border-slate-100 dark:border-slate-700 flex flex-col gap-5 transition-colors">
+
+        <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3 transition-colors">
+            <span class="material-symbols-outlined text-blue-600 dark:text-blue-400 transition-colors">tune</span> Parameter Laporan
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Dari Tanggal</label>
+                <input type="date" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-500 outline-none transition-all">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Sampai Tanggal</label>
+                <input type="date" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-500 outline-none transition-all">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Jenis Kunjungan</label>
+                <select class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-500 outline-none transition-all appearance-none">
+                    <option value="semua">Semua Kunjungan</option>
+                    <option value="lembaga">Hanya Lembaga</option>
+                    <option value="pribadi">Hanya Pribadi</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2 transition-colors">Staf Tujuan</label>
+                <select class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-500 outline-none transition-all appearance-none">
+                    <option value="semua">Semua Staf</option>
+                    <option value="1">Bpk. Hardie</option>
+                    <option value="2">Bpk. Andi</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 pt-2 border-t border-slate-100 dark:border-slate-700 justify-end transition-colors">
+            <button class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">visibility</span> Preview Data
+            </button>
+            <button class="bg-emerald-500 dark:bg-emerald-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-emerald-600 dark:hover:bg-emerald-500 transition-colors shadow-sm dark:shadow-none shadow-emerald-500/20 flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">description</span> Export Excel
+            </button>
+            <button class="bg-blue-600 dark:bg-blue-500 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 dark:hover:bg-blue-400 transition-colors shadow-sm dark:shadow-none shadow-blue-600/20 flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span> Export PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm dark:shadow-none flex items-center gap-4 transition-colors">
+            <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center transition-colors"><span class="material-symbols-outlined">analytics</span></div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">Total Data Tersaring</p>
+                <h3 class="text-2xl font-black text-slate-900 dark:text-white transition-colors">142 Tamu</h3>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm dark:shadow-none flex items-center gap-4 transition-colors">
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center transition-colors"><span class="material-symbols-outlined">domain</span></div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">Tamu Lembaga</p>
+                <h3 class="text-2xl font-black text-slate-900 dark:text-white transition-colors">95 Tamu</h3>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm dark:shadow-none flex items-center gap-4 transition-colors">
+            <div class="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center transition-colors"><span class="material-symbols-outlined">person</span></div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest transition-colors">Tamu Pribadi</p>
+                <h3 class="text-2xl font-black text-slate-900 dark:text-white transition-colors">47 Tamu</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,317 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Registrasi Tamu - SITAMU PeTIK{% endblock %}
+
+{% block content %}
+<div class="max-w-[1200px] mx-auto space-y-6 bg-slate-50 dark:bg-slate-900 min-h-screen pb-12 transition-colors duration-300">
+
+    <div class="flex items-center gap-4">
+        <a href="/" class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white transition-colors">Registrasi Tamu</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">Formulir pendaftaran kunjungan baru.</p>
+        </div>
+    </div>
+
+    <form id="formRegistrasi" method="POST" action="/register" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <div class="lg:col-span-8 space-y-6">
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none border border-slate-100 dark:border-slate-700 transition-colors">
+                <h2 class="text-base font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3 transition-colors">
+                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">badge</span> Data Identitas
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div class="col-span-1 md:col-span-2 relative">
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 transition-colors">Nama Lengkap <span class="text-red-500">*</span></label>
+                        <input type="text" id="nama" name="nama" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all outline-none" placeholder="Masukkan nama tamu...">
+                        <span id="loadingIndicator" class="absolute right-3 top-[30px] material-symbols-outlined animate-spin text-blue-600 dark:text-blue-400 hidden">progress_activity</span>
+                        <p id="searchStatus" class="text-[10px] font-bold mt-1 hidden"></p>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 transition-colors">Nomor KTP (NIK) <span class="text-slate-400 font-normal">(Atau cari via NIK)</span> <span class="text-red-500">*</span></label>
+                        <input type="text" id="nik" name="nik" maxlength="16" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all outline-none" placeholder="Masukkan 16 digit NIK">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 transition-colors">No. Telepon / WhatsApp <span class="text-red-500">*</span></label>
+                        <div class="relative flex items-center">
+                            <span class="absolute left-4 text-sm font-bold text-slate-500 dark:text-slate-400">+62</span>
+
+                            <input type="text" id="telepon" name="telepon" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl py-2.5 pl-12 pr-4 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all outline-none" placeholder="8xx-xxxx-xxxx">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 transition-colors">Asal Instansi / Perusahaan</label>
+                        <input type="text" id="instansi" name="instansi" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all outline-none" placeholder="Opsional">
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 transition-colors">Alamat Lengkap</label>
+                        <input type="text" id="alamat" name="alamat" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all outline-none" placeholder="Opsional">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none border border-slate-100 dark:border-slate-700 transition-colors">
+                <h2 class="text-base font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3 transition-colors">
+                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">assignment</span> Detail Kunjungan
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 transition-colors">Jenis Keperluan <span class="text-red-500">*</span></label>
+                        <select name="jenis_keperluan" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all outline-none appearance-none cursor-pointer">
+                            <option value="lembaga">Kunjungan Lembaga</option>
+                            <option value="pribadi">Kunjungan Pribadi</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 transition-colors">Bertemu Dengan <span class="text-red-500">*</span></label>
+                        <select name="staf_id" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all outline-none appearance-none cursor-pointer">
+                            <option value="">-- Pilih Staf --</option>
+                            {% for staf in staf_list %}
+                                <option value="{{ staf.id }}">{{ staf.nama_staf }} ({{ staf.divisi }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 transition-colors">Keterangan Keperluan <span class="text-red-500">*</span></label>
+                        <textarea name="keperluan" rows="3" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all outline-none" placeholder="Jelaskan tujuan kunjungan secara singkat..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="lg:col-span-4 space-y-6 sticky top-24">
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none border border-slate-100 dark:border-slate-700 flex flex-col items-center transition-colors">
+                <h2 class="w-full text-base font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3 transition-colors">
+                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">photo_camera</span> Verifikasi Foto
+                </h2>
+
+                <div class="w-full mb-3">
+                    <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider">Pilih Kamera</label>
+                    <div class="relative">
+                        <select id="cameraSelect" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer">
+                            <option value="">Memuat kamera...</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[16px] text-slate-400 pointer-events-none">arrow_drop_down</span>
+                    </div>
+                </div>
+
+                <div class="relative w-full aspect-square bg-slate-100 dark:bg-slate-900 rounded-2xl overflow-hidden mb-4 border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-inner transition-colors">
+                    <video id="webcam" autoplay playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+                    <canvas id="canvas" class="absolute inset-0 w-full h-full object-cover hidden"></canvas>
+                    <div id="camLoading" class="flex flex-col items-center text-slate-400 dark:text-slate-500">
+                        <span class="material-symbols-outlined text-[40px] animate-pulse">videocam</span>
+                        <span class="text-[10px] font-bold mt-2">Membuka Kamera...</span>
+                    </div>
+                </div>
+
+                <input type="hidden" name="foto_base64" id="fotoBase64">
+
+                <div class="flex w-full gap-3 mb-6">
+                    <button type="button" id="btnCapture" class="flex-1 bg-slate-900 dark:bg-slate-700 text-white py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-800 dark:hover:bg-slate-600 transition-colors shadow-sm disabled:opacity-50">
+                        <span class="material-symbols-outlined text-[18px]">camera</span> Ambil Foto
+                    </button>
+                    <button type="button" id="btnRetake" class="flex-1 bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 py-2.5 rounded-xl text-sm font-bold hidden items-center justify-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors border border-slate-200 dark:border-slate-600">
+                        <span class="material-symbols-outlined text-[18px]">refresh</span> Ulangi
+                    </button>
+                </div>
+
+                <div class="w-full border-t border-slate-100 dark:border-slate-700 pt-6 transition-colors">
+                    <button type="submit" id="btnSubmit" class="w-full bg-blue-600 text-white py-3.5 rounded-xl text-base font-extrabold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/20 dark:shadow-none">
+                        <span class="material-symbols-outlined">how_to_reg</span> Check-In Tamu
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+
+<script>
+    // =====================================
+    // 1. SISTEM KAMERA & DROPDOWN PEMILIHAN
+    // =====================================
+    const video = document.getElementById('webcam');
+    const canvas = document.getElementById('canvas');
+    const btnCapture = document.getElementById('btnCapture');
+    const btnRetake = document.getElementById('btnRetake');
+    const fotoBase64 = document.getElementById('fotoBase64');
+    const camLoading = document.getElementById('camLoading');
+    const cameraSelect = document.getElementById('cameraSelect');
+
+    let currentStream;
+
+    // Fungsi untuk menyalakan kamera berdasarkan ID perangkat
+    async function startCamera(deviceId = null) {
+        // Matikan stream kamera sebelumnya jika ada
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
+
+        const constraints = {
+            video: deviceId ? { deviceId: { exact: deviceId } } : true
+        };
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            currentStream = stream;
+            video.srcObject = stream;
+            camLoading.classList.add('hidden');
+
+            // Mengambil daftar kamera HANYA saat pertama kali load
+            if (!deviceId) {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+                cameraSelect.innerHTML = ''; // Bersihkan opsi loading
+                videoDevices.forEach((device, index) => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || `Kamera ${index + 1}`;
+                    cameraSelect.appendChild(option);
+                });
+            }
+        } catch (err) {
+            console.error("Error Kamera:", err);
+            camLoading.innerHTML = '<span class="material-symbols-outlined text-red-500">videocam_off</span><span class="text-red-500 text-[10px] font-bold mt-2">Kamera Diblokir/Tidak Ditemukan</span>';
+            btnCapture.disabled = true;
+        }
+    }
+
+    // Jalankan kamera pertama kali
+    startCamera();
+
+    // Event ketika petugas memilih kamera dari dropdown
+    cameraSelect.addEventListener('change', (e) => {
+        camLoading.classList.remove('hidden'); // Munculkan loading
+        startCamera(e.target.value);
+    });
+
+    btnCapture.addEventListener('click', () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        fotoBase64.value = canvas.toDataURL('image/jpeg', 0.8);
+
+        video.classList.add('hidden');
+        canvas.classList.remove('hidden');
+        btnCapture.classList.add('hidden');
+        btnRetake.classList.remove('hidden');
+        btnRetake.style.display = 'flex';
+    });
+
+    btnRetake.addEventListener('click', () => {
+        fotoBase64.value = '';
+        canvas.classList.add('hidden');
+        video.classList.remove('hidden');
+        btnRetake.classList.add('hidden');
+        btnCapture.classList.remove('hidden');
+    });
+
+    // =====================================
+    // 2. SISTEM PENCARIAN GANDA (NAMA ATAU NIK)
+    // =====================================
+    const namaInput = document.getElementById('nama');
+    const nikInput = document.getElementById('nik');
+    const teleponInput = document.getElementById('telepon');
+    const instansiInput = document.getElementById('instansi');
+    const alamatInput = document.getElementById('alamat');
+
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const searchStatus = document.getElementById('searchStatus');
+    let typingTimer;
+
+    // Fungsi fetch API ke server
+    async function cariDataTamu(tipePencarian, nilai) {
+        loadingIndicator.classList.remove('hidden');
+        searchStatus.classList.add('hidden');
+
+        try {
+            // Memanggil route /api/cek_tamu (yang akan kita buat di Python)
+            const response = await fetch(`/api/cek_tamu?${tipePencarian}=${encodeURIComponent(nilai)}`);
+            if(response.ok) {
+                const result = await response.json();
+                if(result.status === 'found') {
+                    // Isi data secara otomatis
+                    if(tipePencarian === 'nama') nikInput.value = result.data.nik;
+                    if(tipePencarian === 'nik') namaInput.value = result.data.nama;
+
+                    teleponInput.value = result.data.telepon || '';
+                    instansiInput.value = result.data.instansi || '';
+                    alamatInput.value = result.data.alamat || '';
+
+                    searchStatus.textContent = "Data ditemukan. Form otomatis terisi.";
+                    searchStatus.className = "text-[10px] font-bold mt-1 text-emerald-500 dark:text-emerald-400 block";
+                } else {
+                    searchStatus.textContent = "Data Tamu Baru.";
+                    searchStatus.className = "text-[10px] font-bold mt-1 text-slate-500 dark:text-slate-400 block";
+                }
+            }
+        } catch(e) {
+            console.error(e);
+        } finally {
+            loadingIndicator.classList.add('hidden');
+        }
+    }
+
+    // Listener untuk Input Nama (Menunggu petugas selesai mengetik selama 800ms)
+    namaInput.addEventListener('input', function() {
+        clearTimeout(typingTimer);
+        searchStatus.classList.add('hidden');
+        if (this.value.length >= 3) { // Hanya mencari jika minimal 3 huruf
+            typingTimer = setTimeout(() => {
+                cariDataTamu('nama', this.value);
+            }, 800);
+        }
+    });
+
+    // Listener untuk Input NIK (Langsung mencari jika 16 digit pas)
+    nikInput.addEventListener('input', function() {
+        searchStatus.classList.add('hidden');
+        if (this.value.length === 16 && /^\d+$/.test(this.value)) {
+            cariDataTamu('nik', this.value);
+        }
+    });
+
+    // 3. Validasi Form
+    document.getElementById('formRegistrasi').addEventListener('submit', function(e) {
+        if(!fotoBase64.value) {
+            e.preventDefault();
+            alert("Harap ambil foto tamu terlebih dahulu untuk keperluan verifikasi keamanan!");
+        }
+    });
+
+    const inputTelepon = document.getElementById('telepon');
+
+inputTelepon.addEventListener('input', function (e) {
+    // 1. Hapus semua karakter selain angka
+    let angka = e.target.value.replace(/\D/g, '');
+
+    // 2. Mencegah user mengetik '0' atau '62' di awal (karena sudah ada +62)
+    if (angka.startsWith('0')) angka = angka.substring(1);
+    if (angka.startsWith('62')) angka = angka.substring(2);
+
+    // 3. Format otomatis menggunakan tanda '-' (Format: 8XX-XXXX-XXXX)
+    let format = '';
+    if (angka.length > 0) format += angka.substring(0, 3);
+    if (angka.length > 3) format += '-' + angka.substring(3, 7);
+    if (angka.length > 7) format += '-' + angka.substring(7, 13);
+
+    e.target.value = format;
+});
+</script>
+{% endblock %}

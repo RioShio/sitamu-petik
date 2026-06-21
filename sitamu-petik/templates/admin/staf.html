@@ -1,0 +1,241 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Manajemen Staf - SITAMU PeTIK{% endblock %}
+
+{% block content %}
+<div class="max-w-[1440px] mx-auto space-y-6 bg-slate-50 dark:bg-slate-900 min-h-screen pb-12 transition-colors duration-300">
+    
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white transition-colors">Manajemen Data Staf</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">Kelola direktori pegawai internal yang berwenang menerima kunjungan tamu.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <button onclick="document.getElementById('modalTambah').classList.remove('hidden')" class="px-4 py-2 bg-blue-600 dark:bg-blue-500 rounded-xl shadow-sm text-sm font-bold text-white hover:bg-blue-700 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">person_add</span> Tambah Pegawai
+            </button>
+        </div>
+    </div>
+
+    <form id="filterForm" action="/admin/staf" method="GET" class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 flex flex-col md:flex-row gap-4 items-center justify-between">
+
+        <div class="relative w-full md:flex-1">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+            <input type="text" id="searchInput" name="search" value="{{ search }}" placeholder="Cari nama atau NIP staf..." class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 dark:text-white outline-none">
+        </div>
+
+        <div class="flex gap-3 w-full md:w-auto">
+            <select name="divisi" onchange="this.form.submit()" class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 outline-none w-full md:w-auto cursor-pointer">
+                <option value="semua" {% if divisi == 'semua' %}selected{% endif %}>Semua Divisi</option>
+                <option value="HR / General Affair" {% if divisi == 'HR / General Affair' %}selected{% endif %}>HR / General Affair</option>
+                <option value="Operasional" {% if divisi == 'Operasional' %}selected{% endif %}>Operasional</option>
+                <option value="Teknologi Informasi" {% if divisi == 'Teknologi Informasi' %}selected{% endif %}>Teknologi Informasi</option>
+                <option value="Akademik" {% if divisi == 'Akademik' %}selected{% endif %}>Akademik</option>
+            </select>
+            </div>
+    </form>
+
+    <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 dark:bg-slate-700/50 text-[10px] uppercase tracking-widest text-slate-400 border-b border-slate-100 dark:border-slate-700">
+                        <th class="px-6 py-4 font-bold">Profil Pegawai</th>
+                        <th class="px-6 py-4 font-bold">Kontak Internal</th>
+                        <th class="px-6 py-4 font-bold">Divisi / Jabatan</th>
+                        <th class="px-6 py-4 font-bold text-center">Tamu Diterima</th>
+                        <th class="px-6 py-4 font-bold text-center">Status</th>
+                        <th class="px-6 py-4 font-bold text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-slate-100 dark:divide-slate-700">
+                    {% if staf_list %}
+                        {% for staf in staf_list %}
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 group">
+                            <td class="px-6 py-4 flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">{{ staf.nama_staf[:2] | upper }}</div>
+                                <div>
+                                    <p class="font-bold text-slate-900 dark:text-white">{{ staf.nama_staf }}</p>
+                                    <p class="text-[10px] text-slate-500">NIP: {{ staf.nip or '-' }}</p>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="font-semibold text-slate-700 dark:text-slate-300">{{ staf.telepon or '-' }}</p>
+                                <p class="text-[10px] text-slate-500">{{ staf.email or '-' }}</p>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="font-semibold text-slate-700 dark:text-slate-300">{{ staf.divisi }}</p>
+                                <p class="text-[10px] text-slate-500">{{ staf.jabatan or '-' }}</p>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold px-3 py-1 rounded-lg text-xs">{{ staf.total_tamu }} Tamu</span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                {% if staf.status == 'aktif' %}
+                                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase">Aktif</span>
+                                {% else %}
+                                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200 uppercase">Nonaktif</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center gap-1">
+                                    <button onclick="document.getElementById('modalEdit{{ staf.id }}').classList.remove('hidden')" class="p-2 text-slate-400 hover:text-blue-600 rounded-lg"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+                                    <form action="/admin/staf/hapus/{{ staf.id }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                                        <button type="submit" class="p-2 text-slate-400 hover:text-red-600 rounded-lg"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <div id="modalEdit{{ staf.id }}" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all">
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg flex flex-col shadow-2xl overflow-hidden transform transition-all">
+
+                                <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+                                    <h3 class="font-extrabold text-slate-900 dark:text-white text-base">Edit Data Pegawai</h3>
+                                    <button type="button" onclick="document.getElementById('modalEdit{{ staf.id }}').classList.add('hidden')" class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">close</span>
+                                    </button>
+                                </div>
+
+                                <form action="/admin/staf/edit/{{ staf.id }}" method="POST" class="flex flex-col max-h-[85vh]">
+                                    <div class="p-6 overflow-y-auto space-y-5 custom-scrollbar">
+
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Nama Lengkap</label>
+                                            <input type="text" name="nama_staf" value="{{ staf.nama_staf }}" required class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all shadow-sm">
+                                        </div>
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">NIP</label>
+                                                <input type="text" name="nip" value="{{ staf.nip or '' }}" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all shadow-sm">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Telepon</label>
+                                                <input type="text" name="telepon" value="{{ staf.telepon or '' }}" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all shadow-sm">
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Email</label>
+                                            <input type="email" name="email" value="{{ staf.email or '' }}" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all shadow-sm">
+                                        </div>
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Divisi</label>
+                                                <select name="divisi" required class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all shadow-sm cursor-pointer">
+                                                    <option value="HR / General Affair" {% if staf.divisi == 'HR / General Affair' %}selected{% endif %}>HR / General Affair</option>
+                                                    <option value="Operasional" {% if staf.divisi == 'Operasional' %}selected{% endif %}>Operasional</option>
+                                                    <option value="Teknologi Informasi" {% if staf.divisi == 'Teknologi Informasi' %}selected{% endif %}>Teknologi Informasi</option>
+                                                    <option value="Akademik" {% if staf.divisi == 'Akademik' %}selected{% endif %}>Akademik</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Jabatan</label>
+                                                <input type="text" name="jabatan" value="{{ staf.jabatan or '' }}" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all shadow-sm">
+                                            </div>
+                                        </div>
+
+                                        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 flex items-center justify-between mt-2">
+                                            <div>
+                                                <p class="text-sm font-bold text-slate-900 dark:text-white">Status Operasional</p>
+                                                <p class="text-[11px] text-slate-500 mt-0.5">Izin penerimaan tamu pada akun staf ini.</p>
+                                            </div>
+                                            <select name="status" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer shadow-sm">
+                                                <option value="aktif" {% if staf.status == 'aktif' %}selected{% endif %}>🟢 Aktif</option>
+                                                <option value="nonaktif" {% if staf.status == 'nonaktif' %}selected{% endif %}>🔴 Nonaktif</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="px-6 py-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-end gap-3">
+                                        <button type="button" onclick="document.getElementById('modalEdit{{ staf.id }}').classList.add('hidden')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors shadow-sm">Batal</button>
+                                        <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-md shadow-blue-500/20 active:scale-95">Simpan Perubahan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="6" class="px-6 py-8 text-center text-slate-500">Tidak ada data staf ditemukan.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="px-6 py-5 border-t border-slate-100 dark:border-slate-700 bg-slate-50/30 text-sm text-slate-500">
+            <span class="font-medium">Total <span class="font-bold text-slate-700 dark:text-slate-300">{{ total_staf }}</span> pegawai</span>
+        </div>
+    </div>
+</div>
+
+<div id="modalTambah" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-xl">
+        <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+            <h3 class="font-bold text-slate-900 dark:text-white">Tambah Pegawai Baru</h3>
+            <button type="button" onclick="document.getElementById('modalTambah').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 dark:hover:text-white"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <form action="/admin/staf/tambah" method="POST" class="p-6 space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label class="text-xs font-bold text-slate-500">Nama Lengkap</label>
+                    <input type="text" name="nama_staf" required class="w-full mt-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm dark:text-white outline-none">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500">NIP</label>
+                    <input type="text" name="nip" class="w-full mt-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm dark:text-white outline-none">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Telepon</label>
+                    <input type="text" name="telepon" class="w-full mt-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm dark:text-white outline-none">
+                </div>
+                <div class="col-span-2">
+                    <label class="text-xs font-bold text-slate-500">Email</label>
+                    <input type="email" name="email" class="w-full mt-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm dark:text-white outline-none">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Divisi</label>
+                    <select name="divisi" required class="w-full mt-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm dark:text-white outline-none">
+                        <option value="HR / General Affair">HR / General Affair</option>
+                        <option value="Operasional">Operasional</option>
+                        <option value="Teknologi Informasi">Teknologi Informasi</option>
+                        <option value="Akademik">Akademik</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500">Jabatan</label>
+                    <input type="text" name="jabatan" class="w-full mt-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-sm dark:text-white outline-none">
+                </div>
+            </div>
+            <div class="mt-6 flex gap-3">
+                <button type="button" onclick="document.getElementById('modalTambah').classList.add('hidden')" class="w-full py-2.5 rounded-xl text-sm font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white">Batal</button>
+                <button type="submit" class="w-full py-2.5 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700">Simpan Data</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Fitur Debounce untuk pencarian teks otomatis
+    let typingTimer;
+    const typingInterval = 500; // Menunggu 500ms (setengah detik) setelah user berhenti mengetik
+    const searchInput = document.getElementById('searchInput');
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function() {
+            document.getElementById('filterForm').submit();
+        }, typingInterval);
+    });
+
+    // Mengembalikan fokus kursor ke akhir teks setelah halaman ter-reload
+    document.addEventListener('DOMContentLoaded', function() {
+        if(searchInput.value) {
+            searchInput.focus();
+            let val = searchInput.value;
+            searchInput.value = '';
+            searchInput.value = val;
+        }
+    });
+</script>
+{% endblock %}

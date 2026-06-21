@@ -1,0 +1,140 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Dashboard Admin - SITAMU PeTIK{% endblock %}
+
+{% block content %}
+<div class="max-w-[1600px] mx-auto space-y-6 bg-slate-50 dark:bg-slate-900 min-h-screen pb-12 transition-colors duration-300">
+
+    <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
+        <div>
+            <h1 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white transition-colors">Executive Command Center</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">Pusat kontrol analitik, evaluasi operasional, dan keputusan strategis SITAMU.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 bg-white dark:bg-slate-800 p-2 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition-colors w-full xl:w-auto">
+
+            <a href="?filter=semua" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-colors {% if current_filter == 'semua' %}bg-slate-900 dark:bg-slate-700 text-white{% else %}text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700{% endif %}">Semua</a>
+
+            <a href="?filter=hari_ini" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-colors {% if current_filter == 'hari_ini' %}bg-slate-900 dark:bg-slate-700 text-white{% else %}text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700{% endif %}">Hari Ini</a>
+
+            <a href="?filter=minggu_ini" class="px-3 py-1.5 text-xs font-semibold rounded-xl transition-colors {% if current_filter == 'minggu_ini' %}bg-slate-900 dark:bg-slate-700 text-white{% else %}text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700{% endif %}">Minggu Ini</a>
+
+            <a href="?filter=bulan_ini" class="px-3 py-1.5 text-xs font-semibold rounded-xl transition-colors {% if current_filter == 'bulan_ini' %}bg-slate-900 dark:bg-slate-700 text-white{% else %}text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700{% endif %}">Bulan Ini</a>
+
+            <a href="?filter=tahun_ini" class="px-3 py-1.5 text-xs font-semibold rounded-xl transition-colors {% if current_filter == 'tahun_ini' %}bg-slate-900 dark:bg-slate-700 text-white{% else %}text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700{% endif %}">Tahun Ini</a>
+
+            <div class="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-1 hidden sm:block"></div>
+
+            <form action="/admin/dashboard" method="GET" class="flex flex-wrap sm:flex-nowrap items-center gap-2 m-0 w-full sm:w-auto">
+                <input type="hidden" name="filter" value="custom">
+                <input type="date" name="start_date" value="{{ start_date or '' }}" required class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 outline-none w-full sm:w-auto cursor-pointer">
+                <span class="text-slate-400 text-xs">s/d</span>
+                <input type="date" name="end_date" value="{{ end_date or '' }}" required class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 outline-none w-full sm:w-auto cursor-pointer">
+                <button type="submit" class="bg-blue-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-blue-700 transition-colors">Cari</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 transition-colors relative overflow-hidden group">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Total Kunjungan</p>
+                    <h3 class="text-3xl font-black text-slate-900 dark:text-white">{{ total_kunjungan | default(0) }}</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 transition-colors"><span class="material-symbols-outlined">analytics</span></div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 transition-colors relative overflow-hidden group">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Tamu Unik</p>
+                    <h3 class="text-3xl font-black text-slate-900 dark:text-white transition-colors">{{ tamu_unik | default(0) }}</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 transition-colors"><span class="material-symbols-outlined">group_add</span></div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 transition-colors relative overflow-hidden group">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Tamu Aktif Saat Ini</p>
+                    <h3 class="text-3xl font-black text-slate-900 dark:text-white transition-colors">{{ tamu_aktif | default(0) }}</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-500 dark:text-amber-400 transition-colors"><span class="material-symbols-outlined">radar</span></div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 transition-colors relative overflow-hidden group">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Staf Paling Sering Dikunjungi</p>
+                    <h3 class="text-xl font-black text-slate-900 dark:text-white mt-1 transition-colors">{{ top_staf | default('Belum Ada Data') }}</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 transition-colors"><span class="material-symbols-outlined">badge</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-3 mt-8">
+        <div class="flex justify-between items-center px-1">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white transition-colors">Monitoring Tamu Aktif</h3>
+            <span class="text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1 animate-pulse"><span class="w-2 h-2 rounded-full bg-blue-600"></span> Live Syncing</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+
+            {% if list_tamu_aktif %}
+                {% for tamu in list_tamu_aktif %}
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 border-l-4 border-l-blue-500 border border-slate-100 dark:border-slate-700 shadow-sm relative flex flex-col justify-between transition-colors">
+                    <div>
+                        <div class="flex gap-3">
+
+                            <div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden ring-2 ring-slate-100 dark:ring-slate-600 shrink-0">
+                                {% if tamu.foto_base64 %}
+                                    <img src="{{ tamu.foto_base64 }}" class="w-full h-full object-cover">
+                                {% else %}
+                                    <img src="https://ui-avatars.com/api/?name={{ tamu.nama_lengkap | urlencode }}&background=random" class="w-full h-full object-cover">
+                                {% endif %}
+                            </div>
+
+                            <div class="flex-1">
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white transition-colors">{{ tamu.nama_lengkap }}</h4>
+                                <p class="text-[10px] text-slate-400 font-mono">Keperluan: {{ tamu.keperluan | default('-') }}</p>
+                                <span class="inline-block mt-1 text-[9px] font-bold bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50 px-1.5 py-0.5 rounded">Sedang Di Dalam</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-4 text-xs bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl transition-colors">
+                            <div>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Jam Masuk</p>
+                                <p class="font-bold text-slate-700 dark:text-slate-300">{{ tamu.waktu_masuk.strftime('%H:%M WIB') }}</p>
+                            </div>
+                            <div class="col-span-2 mt-1">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Bertemu Staf</p>
+                                <p class="font-semibold text-slate-800 dark:text-slate-200 truncate">{{ tamu.nama_staf }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-span-full bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center text-center">
+                    <span class="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-600 mb-3">check_circle</span>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Area Clear</h3>
+                    <p class="text-slate-500 text-sm">Tidak ada tamu yang sedang berada di area PeTIK saat ini.</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Merefresh halaman setiap 60 detik (60000 ms) agar data selalu up-to-date
+    setTimeout(function(){
+       window.location.reload(1);
+    }, 60000);
+</script>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Pengaturan Sistem - SITAMU PeTIK{% endblock %}
+
+{% block content %}
+<div class="max-w-[1440px] mx-auto space-y-6 bg-slate-50 dark:bg-slate-900 min-h-screen pb-12 transition-colors duration-300">
+    
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white transition-colors">Pengaturan Sistem Pusat</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">Konfigurasi operasional, profil instansi, aturan keamanan, dan pemeliharaan database.</p>
+        </div>
+        <div class="flex gap-2">
+            <button type="submit" form="formPengaturan" class="px-6 py-2 bg-blue-600 dark:bg-blue-500 rounded-xl shadow-sm text-sm font-bold text-white hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">save</span> Simpan Perubahan
+            </button>
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6 items-start">
+
+        <div class="w-full md:w-64 bg-white dark:bg-slate-800 rounded-3xl p-4 border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none flex flex-col gap-2 shrink-0 transition-colors sticky top-24">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50/50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-bold transition-colors">
+                <span class="material-symbols-outlined text-[20px]">domain</span>
+                <span class="text-sm">Profil Instansi</span>
+            </a>
+        </div>
+
+        <form id="formPengaturan" action="/admin/pengaturan/save" method="POST" enctype="multipart/form-data" class="flex-1 w-full space-y-6">
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none transition-colors">
+                <h2 class="text-base font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3 transition-colors">
+                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">domain</span> Detail Instansi / Perusahaan
+                </h2>
+
+                <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
+                    <div class="relative group cursor-pointer shrink-0" onclick="document.getElementById('logoInput').click()">
+                        <div id="logoPreviewContainer" class="w-24 h-24 rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl font-black ring-4 ring-slate-50 dark:ring-slate-900 transition-colors overflow-hidden">
+                            {% if profil.logo_path %}
+                                <img id="logoPreview" src="{{ url_for('static', filename='uploads/' + profil.logo_path) }}" class="w-full h-full object-cover">
+                                <span id="logoText" class="hidden">PeTIK</span>
+                            {% else %}
+                                <span id="logoText">PeTIK</span>
+                                <img id="logoPreview" src="" class="hidden w-full h-full object-cover">
+                            {% endif %}
+                        </div>
+                        <div class="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="material-symbols-outlined text-white">photo_camera</span>
+                        </div>
+                        <input type="file" id="logoInput" name="logo" accept="image/png, image/jpeg, image/jpg" class="hidden" onchange="previewImage(this)">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">Logo Aplikasi & Laporan</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Format yang didukung: PNG, JPG (Maks. 2MB). Rasio 1:1.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 transition-colors">Nama Instansi Resmi</label>
+                        <input type="text" name="nama_instansi" value="{{ profil.nama_instansi }}" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 transition-colors">Alamat Lengkap (Untuk Cetak Laporan)</label>
+                        <textarea name="alamat" rows="2" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">{{ profil.alamat }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 transition-colors">Telepon Instansi</label>
+                        <input type="text" name="telepon" value="{{ profil.telepon or '' }}" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 transition-colors">Email Instansi</label>
+                        <input type="email" name="email" value="{{ profil.email or '' }}" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+
+                    <!-- DITAMBAHKAN: NAMA PENANDATANGAN & NIP -->
+                    <div class="col-span-1 md:col-span-2 pt-4 border-t border-slate-100 dark:border-slate-700 mt-2">
+                        <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Pengaturan Tanda Tangan Laporan</h3>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 transition-colors">Nama Penandatangan Laporan</label>
+                        <input type="text" name="nama_penandatangan" value="{{ profil.nama_penandatangan or 'Administrator SITAMU' }}" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 transition-colors">NIP Penandatangan</label>
+                        <input type="text" name="nip_penandatangan" value="{{ profil.nip_penandatangan or '-' }}" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        {% for category, message in messages %}
+          Swal.fire({
+            icon: '{{ category }}',
+            title: 'Berhasil!',
+            text: '{{ message }}',
+            confirmButtonColor: '#2563eb',
+            background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+            color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a'
+          });
+        {% endfor %}
+      });
+    </script>
+  {% endif %}
+{% endwith %}
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.getElementById('logoPreview');
+                var txt = document.getElementById('logoText');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                if (txt) txt.classList.add('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{% endblock %}

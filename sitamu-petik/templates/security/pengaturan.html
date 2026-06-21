@@ -1,0 +1,97 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Pengaturan - SITAMU PeTIK{% endblock %}
+
+{% block content %}
+<div class="max-w-[1440px] mx-auto space-y-6 bg-slate-50 dark:bg-slate-900 min-h-screen pb-12 transition-colors duration-300">
+    
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white transition-colors">Pengaturan Sistem</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">Informasi pos penjagaan dan preferensi perangkat lokal.</p>
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6 items-start">
+
+        <div class="w-full md:w-64 bg-white dark:bg-slate-800 rounded-3xl p-4 border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none flex flex-col gap-2 shrink-0 transition-colors">
+
+            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50/50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-bold transition-colors">
+                <span class="material-symbols-outlined text-[20px]">storefront</span>
+                <span class="text-sm">Profil Pos</span>
+            </a>
+
+            <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-white font-medium transition-colors">
+                <span class="material-symbols-outlined text-[20px]">notifications_active</span>
+                <span class="text-sm">Notifikasi & Suara</span>
+            </a>
+
+        </div>
+
+        <div class="flex-1 w-full bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none space-y-8 transition-colors">
+
+            <div>
+                <h2 class="text-base font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3 transition-colors">
+                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">lock</span> Profil Pos (Read-Only)
+                </h2>
+                <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
+                    <img src="https://ui-avatars.com/api/?name=Pos+Utama&background=0D8ABC&color=fff" class="w-24 h-24 rounded-full object-cover ring-4 ring-slate-50 dark:ring-slate-700 shadow-sm transition-colors opacity-80">
+                    <div class="flex flex-col gap-1">
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">Pos Penjagaan Utama</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Dikelola oleh Administrator Pusat</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 transition-colors">Nama Pos Penjagaan</label>
+                        <input type="text" value="Pos Utama" disabled class="w-full bg-slate-100 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed outline-none transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 transition-colors">Kepala Security</label>
+                        <input type="text" value="Ahmad Satria" disabled class="w-full bg-slate-100 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed outline-none transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1 transition-colors">Kontak Darurat (Ext)</label>
+                        <input type="text" value="0812-3456-7890" disabled class="w-full bg-slate-100 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed outline-none transition-all">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-base font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3 transition-colors">
+                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">volume_up</span> Preferensi Notifikasi Lokal
+                </h2>
+                <div class="space-y-4">
+
+                    <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl transition-colors">
+                        <div>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white transition-colors">Suara Notifikasi Sistem</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 transition-colors">Bunyikan suara saat ada interaksi pada dashboard.</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 transition-colors"></div>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl transition-colors">
+                        <div>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white transition-colors">Alarm Tombol Darurat</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 transition-colors">Bunyikan sirine peringatan saat panic button ditekan.</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500 transition-colors"></div>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

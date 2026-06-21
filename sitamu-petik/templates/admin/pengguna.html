@@ -1,0 +1,297 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Pengguna Sistem - SITAMU PeTIK{% endblock %}
+
+{% block content %}
+<div class="max-w-[1440px] mx-auto space-y-6 bg-slate-50 dark:bg-slate-900 min-h-screen pb-12 transition-colors duration-300">
+    
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white transition-colors">Pengguna Sistem</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">Manajemen hak akses dan akun login untuk administrator dan petugas keamanan.</p>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="document.getElementById('modalTambah').classList.remove('hidden')" class="px-4 py-2 bg-blue-600 dark:bg-blue-500 rounded-xl shadow-sm text-sm font-bold text-white hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">person_add</span> Tambah Pengguna
+            </button>
+        </div>
+    </div>
+
+    <form id="filterForm" action="/admin/pengguna" method="GET" class="bg-white dark:bg-slate-800 rounded-3xl p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none border border-slate-100 dark:border-slate-700 flex flex-col md:flex-row gap-4 items-center justify-between transition-colors">
+
+        <div class="relative w-full md:flex-1">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-[18px] transition-colors">search</span>
+            <input type="text" name="search" id="searchInput" value="{{ search or '' }}" placeholder="Cari nama pengguna atau username..." class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <select name="role" onchange="this.form.submit()" class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none cursor-pointer">
+                <option value="semua" {% if role_filter == 'semua' %}selected{% endif %}>Semua Peran (Role)</option>
+                <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>Administrator</option>
+                <option value="petugas" {% if role_filter == 'petugas' %}selected{% endif %}>Petugas Security</option>
+            </select>
+            <select name="status" onchange="this.form.submit()" class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none cursor-pointer">
+                <option value="semua" {% if status_filter == 'semua' %}selected{% endif %}>Semua Status</option>
+                <option value="aktif" {% if status_filter == 'aktif' %}selected{% endif %}>Status: Aktif</option>
+                <option value="nonaktif" {% if status_filter == 'nonaktif' %}selected{% endif %}>Status: Nonaktif</option>
+            </select>
+        </div>
+    </form>
+
+    <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none overflow-hidden transition-colors">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/80 dark:bg-slate-700/50 text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-400 border-b border-slate-100 dark:border-slate-700 transition-colors">
+                        <th class="px-6 py-4 font-bold">Profil Akun</th>
+                        <th class="px-6 py-4 font-bold">Peran (Role)</th>
+                        <th class="px-6 py-4 font-bold">Terakhir Login</th>
+                        <th class="px-6 py-4 font-bold text-center">Status</th>
+                        <th class="px-6 py-4 font-bold text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-slate-100 dark:divide-slate-700 transition-colors">
+
+                    {% if users %}
+                        {% for u in users %}
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors group {% if u.status == 'nonaktif' %}opacity-75{% endif %}">
+                            <td class="px-6 py-4 flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ring-2 ring-slate-100 dark:ring-slate-700 transition-colors
+                                    {% if u.role == 'admin' %} bg-slate-800 text-white {% else %} bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400 {% endif %}">
+                                    <span class="material-symbols-outlined text-[20px]">{% if u.role == 'admin' %}admin_panel_settings{% else %}security{% endif %}</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-900 dark:text-white transition-colors">{{ u.nama_lengkap }}</p>
+                                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-mono font-medium transition-colors">@{{ u.username }}</p>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if u.role == 'admin' %}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800/50 transition-colors uppercase tracking-wider">
+                                        Administrator
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-100 dark:border-blue-800/50 transition-colors uppercase tracking-wider">
+                                        Petugas Pos
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="font-bold text-slate-700 dark:text-slate-300 text-xs transition-colors">{{ u.last_login or 'Belum Pernah Login' }}</p>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                {% if u.status == 'aktif' %}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 uppercase tracking-wider transition-colors">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Aktif
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 uppercase tracking-wider transition-colors">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500"></span> Nonaktif
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center gap-1">
+                                    <button onclick="document.getElementById('modalEdit{{ u.id }}').classList.remove('hidden')" class="p-2 text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors tooltip" title="Edit Akun">
+                                        <span class="material-symbols-outlined text-[18px]">edit</span>
+                                    </button>
+                                    {% if session.user_id != u.id %}
+                                        <form action="/admin/pengguna/hapus/{{ u.id }}" method="POST" class="inline form-hapus">
+                                            <button type="button" onclick="konfirmasiHapus(this)" class="p-2 text-slate-400 dark:text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors tooltip" title="Hapus Akun">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- ========================================== -->
+                        <!-- MODAL EDIT PENGGUNA (PER BARIS)            -->
+                        <!-- ========================================== -->
+                        <div id="modalEdit{{ u.id }}" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all">
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md flex flex-col shadow-2xl overflow-hidden transform transition-all">
+
+                                <!-- Modal Header -->
+                                <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-slate-800">
+                                    <h3 class="font-extrabold text-slate-900 dark:text-white text-lg">Edit Data Pengguna</h3>
+                                    <button type="button" onclick="document.getElementById('modalEdit{{ u.id }}').classList.add('hidden')" class="text-slate-400 hover:text-red-500 transition-colors">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </button>
+                                </div>
+
+                                <form action="/admin/pengguna/edit/{{ u.id }}" method="POST" class="flex flex-col">
+                                    <!-- Modal Body -->
+                                    <div class="p-6 space-y-4">
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Nama Lengkap</label>
+                                            <input type="text" name="nama_lengkap" value="{{ u.nama_lengkap }}" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Username (Login)</label>
+                                            <input type="text" name="username" value="{{ u.username }}" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Ganti Password <span class="font-normal text-slate-400">(Kosongkan jika tidak diubah)</span></label>
+                                            <input type="password" name="password" placeholder="Ketik password baru..." class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Peran</label>
+                                                <select name="role" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all">
+                                                    <option value="petugas" {% if u.role == 'petugas' %}selected{% endif %}>Petugas Pos</option>
+                                                    {% if session.user_id == u.id or session.role == 'admin' %}
+                                                        <option value="admin" {% if u.role == 'admin' %}selected{% endif %}>Administrator</option>
+                                                    {% endif %}
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Status</label>
+                                                <select name="status" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all">
+                                                    <option value="aktif" {% if u.status == 'aktif' %}selected{% endif %}>Aktif</option>
+                                                    {% if session.user_id != u.id %}
+                                                        <option value="nonaktif" {% if u.status == 'nonaktif' %}selected{% endif %}>Nonaktif</option>
+                                                    {% endif %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal Footer -->
+                                    <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-3">
+                                        <button type="button" onclick="document.getElementById('modalEdit{{ u.id }}').classList.add('hidden')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors">Batal</button>
+                                        <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition-colors">Simpan Perubahan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">Tidak ada pengguna yang ditemukan.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="px-6 py-5 border-t border-slate-100 dark:border-slate-700 flex justify-between text-sm text-slate-500 dark:text-slate-400 bg-slate-50/30 dark:bg-slate-700/30">
+            <span class="font-medium">Total <span class="font-bold text-slate-700 dark:text-slate-300">{{ total_users }}</span> pengguna terdaftar.</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL TAMBAH PENGGUNA BARU                 -->
+<!-- ========================================== -->
+<div id="modalTambah" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md flex flex-col shadow-2xl overflow-hidden transform transition-all">
+
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-slate-800">
+            <h3 class="font-extrabold text-slate-900 dark:text-white text-lg">Tambah Pengguna Baru</h3>
+            <button type="button" onclick="document.getElementById('modalTambah').classList.add('hidden')" class="text-slate-400 hover:text-red-500 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form action="/admin/pengguna/tambah" method="POST" class="flex flex-col">
+            <!-- Modal Body -->
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Nama Lengkap</label>
+                    <input type="text" name="nama_lengkap" required placeholder="Contoh: Danang Wijaya" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Username (Login)</label>
+                    <input type="text" name="username" required placeholder="Contoh: petugas_pos" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Password Awal</label>
+                    <input type="password" name="password" required placeholder="Ketik sandi yang kuat..." class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Pilih Peran Sistem</label>
+                    <select name="role" required class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all">
+                        <option value="petugas">Petugas Pos Security (Hanya input tamu)</option>
+                        <option value="admin">Administrator (Akses penuh Dashboard)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('modalTambah').classList.add('hidden')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors">Batal</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition-colors">Simpan & Buat Akun</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // 1. Fitur Debounce untuk pencarian teks otomatis
+    let typingTimer;
+    const searchInput = document.getElementById('searchInput');
+
+    if(searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(function() {
+                document.getElementById('filterForm').submit();
+            }, 600); // Tunggu 0.6 detik
+        });
+
+        // Kembalikan fokus kursor
+        document.addEventListener('DOMContentLoaded', function() {
+            if(searchInput.value) {
+                searchInput.focus();
+                let val = searchInput.value;
+                searchInput.value = '';
+                searchInput.value = val;
+            }
+        });
+    }
+
+    // 2. Alert Sukses/Gagal dari Flask Flash
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for category, message in messages %}
+              Swal.fire({
+                icon: '{{ category }}',
+                title: 'Pemberitahuan',
+                text: '{{ message }}',
+                confirmButtonColor: '#2563eb',
+                background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a'
+              });
+            {% endfor %}
+        });
+      {% endif %}
+    {% endwith %}
+
+    // 3. SweetAlert Konfirmasi Hapus Akun
+    function konfirmasiHapus(button) {
+        const form = button.closest('.form-hapus');
+        Swal.fire({
+            title: 'Hapus Pengguna Ini?',
+            text: "Akun tidak akan bisa login kembali!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+            color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#0f172a'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+</script>
+{% endblock %}

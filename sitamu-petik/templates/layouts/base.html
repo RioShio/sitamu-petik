@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}SITAMU PeTIK{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <meta http-equiv="refresh" content="60">
+
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-body-md text-body-md h-screen w-screen overflow-hidden flex relative transition-colors duration-300">
+
+    <div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/50 dark:bg-black/70 z-40 hidden md:hidden transition-opacity opacity-0 backdrop-blur-sm"></div>
+
+    {% include 'components/sidebar.html' %}
+
+    <main class="flex-1 flex flex-col min-w-0 h-full relative w-full overflow-hidden">
+        {% include 'components/navbar.html' %}
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <script>
+        // 1. Logika Sidebar Mobile
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const btnOpen = document.getElementById('btnOpenSidebar');
+        // Fitur close sidebar (jika ada tombol close di dalam sidebar)
+        const btnClose = document.getElementById('btnCloseSidebar');
+
+        function toggleSidebar(show) {
+            if (show) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+
+        if (btnOpen) btnOpen.addEventListener('click', () => toggleSidebar(true));
+        if (btnClose) btnClose.addEventListener('click', () => toggleSidebar(false));
+        if (overlay) overlay.addEventListener('click', () => toggleSidebar(false));
+
+        // 2. Logika Toggle Dark Mode
+        const themeToggleBtn = document.getElementById('themeToggle');
+
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', function() {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.theme = 'light';
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.theme = 'dark';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

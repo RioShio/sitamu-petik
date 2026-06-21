@@ -1,0 +1,79 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Notifikasi & Alert - SITAMU PeTIK{% endblock %}
+
+{% block content %}
+<div class="max-w-[1440px] mx-auto space-y-6 bg-slate-50 dark:bg-slate-900 min-h-screen pb-12 transition-colors duration-300">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white transition-colors">Notifikasi & Alert</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm transition-colors">Pantau peringatan sistem, status tamu yang melampaui batas waktu, dan konfigurasi alert.</p>
+        </div>
+        <div class="flex gap-2">
+            <button class="px-4 py-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                Tandai Semua Dibaca
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- List Notifikasi -->
+        <div class="lg:col-span-2 space-y-3">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm p-2 transition-colors">
+                
+                <!-- Notifikasi 1: Alert Overtime -->
+                <div class="flex items-start gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-2xl transition-colors">
+                    <div class="w-10 h-10 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-[20px]">timer</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">Tamu Melewati Batas Waktu (Overtime)</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Pengunjung **Ahmad Fauzi** telah berada di area selama 4 jam 20 menit (Batas: 2 jam).</p>
+                        <div class="mt-2 flex gap-2">
+                            <button class="px-3 py-1 bg-blue-600 text-white text-[10px] font-bold rounded-lg hover:bg-blue-700">Lihat Tamu</button>
+                            <button class="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold rounded-lg">Abaikan</button>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-slate-400 font-mono whitespace-nowrap">10:45 WIB</span>
+                </div>
+
+                <!-- Notifikasi 2: Info Sistem -->
+                <div class="flex items-start gap-4 p-4 border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-2xl transition-colors">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-[20px]">info</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-bold text-slate-900 dark:text-white">Backup Database Otomatis</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Backup data kunjungan mingguan telah berhasil tersimpan di server cloud.</p>
+                    </div>
+                    <span class="text-[10px] text-slate-400 font-mono whitespace-nowrap">08:00 WIB</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pengaturan Alert -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-100 dark:border-slate-700 shadow-sm transition-colors h-fit">
+            <h3 class="font-bold text-slate-900 dark:text-white mb-4 transition-colors">Konfigurasi Alert</h3>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-600 dark:text-slate-300">Notifikasi Overtime (Email)</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-slate-200 dark:bg-slate-700 rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
+                    </label>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-600 dark:text-slate-300">Bunyi Sirine Panic Button</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-slate-200 dark:bg-slate-700 rounded-full peer peer-checked:bg-red-600 transition-all"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
